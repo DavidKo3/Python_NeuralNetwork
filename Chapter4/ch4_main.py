@@ -83,12 +83,18 @@ def gradient_bias_out(Eo):
 ########## Vectorization of the hidden layer backward step #########################################################
 
 
+# Define the error function at the hidden layer
+def error_hidden(H, Wo, Eo):
+    # H*(1-H)*(E.Wo^T)
+    return np.multiply(np.multiply(H, (1-H)), Eo.dot(Wo.T))
 
+# Define the gradient function for the weight parameters at the hidden layer
+def gradient_weight_hidden(X, Eh):
+    return X.T.dot(Eh)
 
-
-
-
-
+# Define the gradient function for the bias parameters at the output layer
+def gradient_bias_hidden(Eh):
+    return np.sum(Eh, axis=0, heepdims=True )
 
 
 
