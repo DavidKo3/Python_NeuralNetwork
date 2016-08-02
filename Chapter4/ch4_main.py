@@ -97,4 +97,3 @@ def gradient_bias_out(Eo):
 
 
 
-
