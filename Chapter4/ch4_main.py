@@ -98,6 +98,47 @@ def gradient_bias_hidden(Eh):
 
 
 
+################# Gradient checking ###################################################################################
+init_var = 1
+# Initialize hidden layer parameters
+bh = np.random.randn(1, 3)*init_var
+Wh = np.random.randn(2, 3)*init_var
+# Initialize output layer parameters
+bo = np.random.randn(1, 2)*init_var
+Wo = np.random.randn(3, 2)*init_var
+
+# Compute the gradients by backprogation
+# Compute the activations of the layers
+H = hidden_activations(X, Wh, bh)
+Y = output_activations(H, Wo, bo)
+
+# Compute the gradients of the output layer
+Eo  = error_output(Y, T)
+JWo = gradient_weight_hidden(H, Eo)
+Jbo = gradient_bias_out(Eo)
+# Compute the gradients of the hidden layer
+Eh  = error_hidden(H, Wo, Eo)
+JWh = gradient_weight_hidden(X, Eh)
+Jbh = gradient_bias_hidden(Eh) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
