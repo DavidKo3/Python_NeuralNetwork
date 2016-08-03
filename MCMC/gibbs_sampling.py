@@ -1,3 +1,4 @@
+# refer https://theclevermachine.wordpress.com/2012/11/05/mcmc-the-gibbs-sampler/
 import numpy as np
 from scipy.ndimage.measurements import variance
 
