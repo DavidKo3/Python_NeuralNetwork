@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt  # Plotting library
 from matplotlib.colors import colorConverter, ListedColormap  # Some plotting functions
 from mpl_toolkits.mplot3d import Axes3D  # 3D plots
 from matplotlib import cm  # Colormaps
+from mpmath import eps
 # # Allow matplotlib to plot inside this notebook
 # %matplotlib inline
 # Set the seed of the numpy random number generator so that the tutorial is reproducable
@@ -121,10 +122,35 @@ Eh  = error_hidden(H, Wo, Eo)
 JWh = gradient_weight_hidden(X, Eh)
 Jbh = gradient_bias_hidden(Eh) 
 
+# Combine all parameter matrices in a list
+params = [Wh, bh, Wo, bo]
+# Combine all parameter gradients in a list
+grad_params = [JWh, Jbh, JWo, Jbo]
 
+# Set the small change to compute the numerical gradient
+eps = 0.0001
 
-
-
+# Check each parameter matrix
+for p_idx in range(len(params)):
+    # Check each parameter in each parameter matrix
+    for row in range(params[p_idx].shape[0]):
+        for col in range(params[p_idx].shape[1]):
+            # Copy the parameter matrix and change the current parameter slightly
+            p_matrix_min = params[p_idx].copy()
+            p_matrix_min[row, col] -= eps
+            p_matrix_plus = params[p_idx].copy()
+            p_matrix_plus[row, col] += eps
+            # Copy the parameter list, and change the updated parameter matrix
+            params_min = params[:]
+            params_min[p_idx] = p_matrix_min
+            params_plus = params[:]
+            params_plus[p_idx] = p_matrix_plus
+            # Compute the numerical gradient
+            grad_num = (cost(nn(X, *params_plus), T) - cost(nn(X, *params_min), T))/(2*eps)
+            # Compute error if the numerical grade is not close to the backprop gradient
+            if not np.isclose(grad_num, grad_params[p_idx][row,col]):
+                raise ValueError('Numerical gradient of {:.6f} is not close to the backpropagation gradient of {:.6f}!'.format(float(grad_num), float(grad_params[p_idx][row,col])))
+print('No gradient errors found')
 
 
 
