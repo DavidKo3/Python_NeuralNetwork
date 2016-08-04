@@ -152,6 +152,7 @@ for p_idx in range(len(params)):
                 raise ValueError('Numerical gradient of {:.6f} is not close to the backpropagation gradient of {:.6f}!'.format(float(grad_num), float(grad_params[p_idx][row,col])))
 print('No gradient errors found')
 
+dfdf
 
 
 
