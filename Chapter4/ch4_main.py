@@ -152,14 +152,36 @@ for p_idx in range(len(params)):
                 raise ValueError('Numerical gradient of {:.6f} is not close to the backpropagation gradient of {:.6f}!'.format(float(grad_num), float(grad_params[p_idx][row,col])))
 print('No gradient errors found')
 
-dfdf
+### Backpropagation updates with momentum ############################################################
+
+# Define the update function to update the network parameters over 1 iteration
+def backprop_gradients(X, T, Wh, bh, Wo, bo):
+    # Compute the output of the network
+    # Compute the activations of thHe layers
+    H = hidden_activations(X, Wh, bh)
+    Y = output_activations(H, Wo, bo)
+    # Compute the gradients of the output layer
+    Eo = error_output(Y, T)
+    Jwo = gradient_weight_out(H, Eo)
+    Jbo = graduebt_bias_out(Eo)
+    # Compute the gradients of the hidden layer
+    Eh = error_hidden(H, Wo, Eo)
+    Jwh = gradient_weight_hidden(X, Eh)
+    Jbh = gradient_bias_hidden(Eh)
+    
+    return [JWh, Jbh, JWo, Jbo]
+
+def update_velocity(X, T, ls_of_params, Vs, momentum_term, learning_rate):
+    # ls_of_params = [Wh, bh, Wo, bo]
+    # Js = [JWh, Jbh, JWo, Jbo]
+    Js = backprop_gradients(X, T, *ls_of_params)
+    return [momentum_term*V - learning_rate*J for V,J in zip(Vs, Js)]
 
 
-
-
-
-
-
+def update_params(ls_of_params, Vs):
+    # ls_of_params = [Wh, bh, Wo, bo]
+    # Vs = [VWh, Vbh, VWo, Vbo]
+    return [P+V for P,V in zip(ls_of_params, Vs)]
 
 
 
