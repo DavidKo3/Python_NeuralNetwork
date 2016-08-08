@@ -54,9 +54,13 @@ while t < nSamples:
 # Display sampling dynamics
 fig= plt.figure() 
 ax1 = fig.add_subplot(111)
-
-ax1.scatter(x[:,0], x[:,1], color='blue', s=5, edgecolor='none')
-ax1.grid(True)
 ax1.set_ylim([-11,11])
 ax1.set_xlim([-11,11])
+ax1.scatter(x[:,0], x[:,1], color='blue', s=5, edgecolor='none')
+ax1.grid(True)
+ax1.scatter(x[0,0],x[0,1], color='red')
+
+# Conditional steps/samples
+for t in range(1, 51):
+    
 plt.show()
