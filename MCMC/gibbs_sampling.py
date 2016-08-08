@@ -1,6 +1,7 @@
 # refer https://theclevermachine.wordpress.com/2012/11/05/mcmc-the-gibbs-sampler/
 import numpy as np
 from scipy.stats import norm
+import matplotlib.pyplot as plt
 # from scipy.ndimage.measurements import variance
 
 # Example : GIBBS sampler for bivariate_normal
@@ -26,7 +27,7 @@ dims = np.array([1, 2])
 
 # Run GIBBS Sampler
 t= 0
-nSamples= 2
+nSamples= 5000
 
 print np.random.normal(0.0, 1.0 )
 while t < nSamples:
@@ -50,3 +51,12 @@ while t < nSamples:
         print x
     t= t + 1    
     
+# Display sampling dynamics
+fig= plt.figure() 
+ax1 = fig.add_subplot(111)
+
+ax1.scatter(x[:,0], x[:,1], color='blue', s=5, edgecolor='none')
+ax1.grid(True)
+ax1.set_ylim([-11,11])
+ax1.set_xlim([-11,11])
+plt.show()
