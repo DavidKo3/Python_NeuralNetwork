@@ -35,5 +35,5 @@ while t < nSamples:
         # Conditional variance
         varCond = np.math.sqrt(1-np.math.pow(rho(iD)))
         # Draw from conditional 
-        # 
+        x[t, iD]= np.random.normal(muCond, varCond)
         
