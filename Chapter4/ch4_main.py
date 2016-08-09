@@ -164,7 +164,7 @@ def backprop_gradients(X, T, Wh, bh, Wo, bo):
     # Compute the gradients of the output layer
     Eo = error_output(Y, T)
     Jwo = gradient_weight_out(H, Eo)
-    Jbo = graduebt_bias_out(Eo)
+    Jbo = gradient_bias_out(Eo)
     # Compute the gradients of the hidden layer
     Eh = error_hidden(H, Wo, Eo)
     Jwh = gradient_weight_hidden(X, Eh)
@@ -185,7 +185,7 @@ def update_params(ls_of_params, Vs):
     return [P+V for P,V in zip(ls_of_params, Vs)]
 
 
-# Run backpropgation
+# Run backpropagation
 # Initialize weights and biases
 init_var = 0.1
 # Initialize hidden layer parameters
@@ -202,9 +202,22 @@ momentum_term = 0.9
 # define the velocities Vs = [VWh, Vbh, VWo, Vbo]
 Vs = [ np.zeros_like(M) for M in [Wh, bh, Wo, bo]]
 
+# Start the gradient descent updates and plot the iterations
+nb_of_iterations = 300 # number of gradient descent updates
+lr_update = learning_rate/nb_of_iterations # learning rate update rule
+ls_costs = [cost(nn(X, Wh, bh, Wo, bo), T)] # list of cost over iterations
+print "ls_costs"
+print ls_costs
+for i in range(nb_of_iterations):
+    # Update the velocities and the parameters
+    Vs = update_velocity(X, T, [Wh, bh, Wo, bo], Vs, momentum_term, learning_rate)
+    Wh, bh, Wo, bo = update_params([Wh, bh, Wo, bo], Vs)
+    ls_costs.append(cost(nn(X, Wh, bh, Wo, bo), T))
 
-
-
-
-
-
+# Plot the cost over the iterations
+plt.plot(ls_costs, 'b-')
+plt.xlabel('iteration')
+plt.ylabel('$\\xi$', fontsize=15)
+plt.title('Decrease of cost over backprop iteration')
+plt.grid()
+plt.show()
