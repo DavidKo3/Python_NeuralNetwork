@@ -6,6 +6,7 @@ from matplotlib.colors import colorConverter, ListedColormap  # Some plotting fu
 from mpl_toolkits.mplot3d import Axes3D  # 3D plots
 from matplotlib import cm  # Colormaps
 from mpmath import eps
+from sklearn.learning_curve import learning_curve
 # # Allow matplotlib to plot inside this notebook
 # %matplotlib inline
 # Set the seed of the numpy random number generator so that the tutorial is reproducable
@@ -95,7 +96,7 @@ def gradient_weight_hidden(X, Eh):
 
 # Define the gradient function for the bias parameters at the output layer
 def gradient_bias_hidden(Eh):
-    return np.sum(Eh, axis=0, heepdims=True )
+    return np.sum(Eh, axis=0, keepdims=True )
 
 
 
@@ -184,8 +185,22 @@ def update_params(ls_of_params, Vs):
     return [P+V for P,V in zip(ls_of_params, Vs)]
 
 
+# Run backpropgation
+# Initialize weights and biases
+init_var = 0.1
+# Initialize hidden layer parameters
+bh = np.random.randn(1, 3) * init_var
+Wh = np.random.randn(2, 3) * init_var
+# Initialize output layer parameters
+bo = np.random.randn(1, 2) * init_var
+Wo = np.random.randn(3, 2) * init_var
+# Parameters are already initialized randomly with the gradient checking 
+# Set the learning rate
+learning_rate = 0.02
+momentum_term = 0.9
 
-
+# define the velocities Vs = [VWh, Vbh, VWo, Vbo]
+Vs = [ np.zeros_like(M) for M in [Wh, bh, Wo, bo]]
 
 
 
