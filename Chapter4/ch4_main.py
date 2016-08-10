@@ -38,12 +38,13 @@ plt.show()
 
 
 
+
 # Define the logistic function
-def logistic(z):
+def logistic(z): 
     return 1 / (1 + np.exp(-z))
 
 # Define the softmax function
-def softmax(z):
+def softmax(z): 
     return np.exp(z) / np.sum(np.exp(z), axis=1, keepdims=True)
 
 # Function to compute the hidden activations
@@ -55,12 +56,12 @@ def output_activations(H, Wo, bo):
     return softmax(H.dot(Wo) + bo)
 
 # Define the neural network function
-def nn(X, Wh, bh, Wo, bo):
+def nn(X, Wh, bh, Wo, bo): 
     return output_activations(hidden_activations(X, Wh, bh), Wo, bo)
 
 # Define the neural network prediction function that only returns
 #  1 or 0 depending on the predicted class
-def nn_predict(X, Wh, bh, Wo, bo):
+def nn_predict(X, Wh, bh, Wo, bo): 
     return np.around(nn(X, Wh, bh, Wo, bo))
 
 
@@ -75,11 +76,11 @@ def error_output(Y, T):
     return Y - T
 
 # Define the gradient function for the weight parameters at the output layer
-def gradient_weight_out(H, Eo):
+def gradient_weight_out(H, Eo): 
     return  H.T.dot(Eo)
 
 # Define the gradient function for the bias parameters at the output layer
-def gradient_bias_out(Eo):
+def gradient_bias_out(Eo): 
     return  np.sum(Eo, axis=0, keepdims=True)
 
 ########## Vectorization of the hidden layer backward step #########################################################
@@ -87,16 +88,16 @@ def gradient_bias_out(Eo):
 
 # Define the error function at the hidden layer
 def error_hidden(H, Wo, Eo):
-    # H*(1-H)*(E.Wo^T)
-    return np.multiply(np.multiply(H, (1-H)), Eo.dot(Wo.T))
+    # H * (1-H) * (E . Wo^T)
+    return np.multiply(np.multiply(H,(1 - H)), Eo.dot(Wo.T))
 
 # Define the gradient function for the weight parameters at the hidden layer
 def gradient_weight_hidden(X, Eh):
     return X.T.dot(Eh)
 
 # Define the gradient function for the bias parameters at the output layer
-def gradient_bias_hidden(Eh):
-    return np.sum(Eh, axis=0, keepdims=True )
+def gradient_bias_hidden(Eh): 
+    return  np.sum(Eh, axis=0, keepdims=True)
 
 
 
@@ -158,31 +159,29 @@ print('No gradient errors found')
 # Define the update function to update the network parameters over 1 iteration
 def backprop_gradients(X, T, Wh, bh, Wo, bo):
     # Compute the output of the network
-    # Compute the activations of thHe layers
+    # Compute the activations of the layers
     H = hidden_activations(X, Wh, bh)
     Y = output_activations(H, Wo, bo)
     # Compute the gradients of the output layer
     Eo = error_output(Y, T)
-    Jwo = gradient_weight_out(H, Eo)
+    JWo = gradient_weight_out(H, Eo)
     Jbo = gradient_bias_out(Eo)
     # Compute the gradients of the hidden layer
     Eh = error_hidden(H, Wo, Eo)
-    Jwh = gradient_weight_hidden(X, Eh)
+    JWh = gradient_weight_hidden(X, Eh)
     Jbh = gradient_bias_hidden(Eh)
-    
     return [JWh, Jbh, JWo, Jbo]
 
 def update_velocity(X, T, ls_of_params, Vs, momentum_term, learning_rate):
     # ls_of_params = [Wh, bh, Wo, bo]
     # Js = [JWh, Jbh, JWo, Jbo]
     Js = backprop_gradients(X, T, *ls_of_params)
-    return [momentum_term*V - learning_rate*J for V,J in zip(Vs, Js)]
-
+    return [momentum_term * V - learning_rate * J for V,J in zip(Vs, Js)]
 
 def update_params(ls_of_params, Vs):
     # ls_of_params = [Wh, bh, Wo, bo]
     # Vs = [VWh, Vbh, VWo, Vbo]
-    return [P+V for P,V in zip(ls_of_params, Vs)]
+    return [P + V for P,V in zip(ls_of_params, Vs)]
 
 
 # Run backpropagation
@@ -194,20 +193,18 @@ Wh = np.random.randn(2, 3) * init_var
 # Initialize output layer parameters
 bo = np.random.randn(1, 2) * init_var
 Wo = np.random.randn(3, 2) * init_var
-# Parameters are already initialized randomly with the gradient checking 
+# Parameters are already initilized randomly with the gradient checking
 # Set the learning rate
 learning_rate = 0.02
 momentum_term = 0.9
 
 # define the velocities Vs = [VWh, Vbh, VWo, Vbo]
-Vs = [ np.zeros_like(M) for M in [Wh, bh, Wo, bo]]
+Vs = [np.zeros_like(M) for M in [Wh, bh, Wo, bo]]
 
 # Start the gradient descent updates and plot the iterations
-nb_of_iterations = 300 # number of gradient descent updates
-lr_update = learning_rate/nb_of_iterations # learning rate update rule
-ls_costs = [cost(nn(X, Wh, bh, Wo, bo), T)] # list of cost over iterations
-print "ls_costs"
-print ls_costs
+nb_of_iterations = 300  # number of gradient descent updates
+lr_update = learning_rate / nb_of_iterations # learning rate update rule
+ls_costs = [cost(nn(X, Wh, bh, Wo, bo), T)]  # list of cost over the iterations
 for i in range(nb_of_iterations):
     # Update the velocities and the parameters
     Vs = update_velocity(X, T, [Wh, bh, Wo, bo], Vs, momentum_term, learning_rate)
@@ -221,3 +218,59 @@ plt.ylabel('$\\xi$', fontsize=15)
 plt.title('Decrease of cost over backprop iteration')
 plt.grid()
 plt.show()
+
+##### Visualization of the trained classifier #######################################################################
+# Generate a grid over a the input space to plot the color of the 
+# classification at that grid point
+#####################################################################################################################
+nb_of_xs = 200
+xs1 = np.linspace(-2, 2, num=nb_of_xs)
+xs2 = np.linspace(-2, 2, num=nb_of_xs)
+xx , yy = np.meshgrid(xs1, xs2) # create the grid
+# Initialization and fill the classification plane
+classification_plane = np.zeros((nb_of_xs , nb_of_xs))
+for i in range(nb_of_xs):
+    for j in range(nb_of_xs):
+        pred = nn_predict(np.asmatrix([xx[i,j], yy[i,j]]), Wh, bh, Wo, bo)
+        classification_plane[i,j] = pred[0,0]
+        print "classification_plane"
+        print classification_plane[i,j]
+
+# Create a color map to show the classification colors of each grid point
+cmap = ListedColormap([
+        colorConverter.to_rgba('b', alpha=0.30),
+        colorConverter.to_rgba('r', alpha=0.30)])
+
+# Plot the classification plane with decision boundary and input samples
+plt.contourf(xx, yy, classification_plane, cmap=cmap)
+# Plot both classes on the x1, x2 plane
+plt.plot(x_red[:,0], x_red[:,1], 'ro', label='class red')
+plt.plot(x_blue[:,0], x_blue[:,1], 'bo', label='class blue')
+plt.grid()
+plt.legend(loc=1)
+plt.xlabel('$x_1$', fontsize=15)
+plt.ylabel('$x_2$', fontsize=15)
+plt.axis([-1.5, 1.5, -1.5, 1.5])
+plt.title('red vs blue classification boundary')
+plt.show()
+
+
+
+# Plot the projection of the input onto the hidden layer
+
+# Define the projections of the blue and red classes
+H_blue = hidden_activations(x_blue, Wh, bh)
+H_red = hidden_activations(x_red, Wh, bh)
+# Plot the error surface
+fig = plt.figure()
+ax = Axes3D(fig)
+ax.plot(np.ravel(H_blue[:,0]), np.ravel(H_blue[:,1]), np.ravel(H_blue[:,2]), 'bo')
+ax.plot(np.ravel(H_red[:,0]), np.ravel(H_red[:,1]), np.ravel(H_red[:,2]), 'ro')
+ax.set_xlabel('$h_1$', fontsize=15)
+ax.set_ylabel('$h_2$', fontsize=15)
+ax.set_zlabel('$h_3$', fontsize=15)
+ax.view_init(elev=10, azim=-40)
+plt.title('Projection of the input X onto the hidden layer H')
+plt.grid()
+plt.show()
+
