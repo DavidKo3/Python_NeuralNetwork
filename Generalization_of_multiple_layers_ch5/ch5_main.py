@@ -1,5 +1,7 @@
 # refer http://peterroelants.github.io/posts/neural_network_implementation_part05/
-##  Generalization of multiple layers
+
+##  Generalization of multiple layers ############################################################
+
 # Python imports
 import numpy as np # Matrix and vector computation package
 import matplotlib.pyplot as plt  # Plotting library
