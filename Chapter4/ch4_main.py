@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt  # Plotting library
 from matplotlib.colors import colorConverter, ListedColormap  # Some plotting functions
 from mpl_toolkits.mplot3d import Axes3D  # 3D plots
 from matplotlib import cm  # Colormaps
-from mpmath import eps
-from sklearn.learning_curve import learning_curve
+
 # # Allow matplotlib to plot inside this notebook
 # %matplotlib inline
 # Set the seed of the numpy random number generator so that the tutorial is reproducable
