@@ -38,4 +38,6 @@ X_train, X_test, T_train, T_test = cross_validation.train_test_split(digits.data
 
 print "X_train\n"
 print X_train
-                                                                    
+                 
+                 
+                                                   
