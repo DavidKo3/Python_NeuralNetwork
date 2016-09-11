@@ -39,5 +39,38 @@ X_train, X_test, T_train, T_test = cross_validation.train_test_split(digits.data
 print "X_train\n"
 print X_train
                  
-                 
-                                                   
+# Defome the non-linear functions used
+def logistic(z):
+    return 1/(1+np.exp(-z))
+
+def logistic_deriv(y):
+    # Derivative of logistic function
+    return np.multiply(y, (1-y))
+
+def softmax(z):
+    return np.exp(z).np.sum(np.exp(z) , axis=1, keepdims=True)
+
+# Define tha layers used in this model
+class Layer(object):
+    """ Base class for the different layers.
+    Defines base methods and documentation of methods."""
+    def get_parmas_iter(self):
+        """ Return an iterator over the parameters(if any)
+          The iterator has the same order as get_params_grad.
+          The elements returned by iterator are editable in-place."""
+        return []
+    
+
+
+
+
+
+
+
+
+
+
+
+
+       
+                                                
