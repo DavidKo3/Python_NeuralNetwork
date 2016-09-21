@@ -73,6 +73,7 @@ class Layer(object):
             (gradient at input of next layer)
             Output layer uses targets T to compute the gradient based on the
             output error instead of output_grad"""
+            
     
     
     
