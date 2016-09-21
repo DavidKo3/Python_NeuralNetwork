@@ -59,8 +59,33 @@ class Layer(object):
           The iterator has the same order as get_params_grad.
           The elements returned by iterator are editable in-place."""
         return []
+    def get_params_grad(self, X, output_grad):
+        """Return a list of gradients over ther parameters.
+            The list has the same order as the get_params_iter iterator.
+            X is the input.
+            output_grad is the gradient at the output of this layer.
+          """
+        return []
+    def get_input_grad(self, Y, output_grad=None,T=None):   
+        """Return the gradient at the inputs of this layer.
+            Y is the pre-computed output of this layer ( not needed in this case)
+            output-grad is the gradient at the output of this layer
+            (gradient at input of next layer)
+            Output layer uses targets T to compute the gradient based on the
+            output error instead of output_grad"""
     
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
