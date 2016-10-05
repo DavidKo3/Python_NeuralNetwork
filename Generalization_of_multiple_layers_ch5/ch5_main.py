@@ -73,7 +73,51 @@ class Layer(object):
             (gradient at input of next layer)
             Output layer uses targets T to compute the gradient based on the
             output error instead of output_grad"""
-            
+        pass
+
+class LinearLayer(Layer):
+    """The linear layer performs a linear transformation to its input."""
+    
+    def __init__(self, n_in, n_out):
+        """Initialize hidden layer parameters.
+        n_in is the number of input variables.
+        n_out is the number of output variables."""
+        self.W = np.random.randn(n_in, n_out) * 0.1
+        self.b = np.zeros(n_out)
+        
+    def get_params_iter(self):
+        """Return an iterator over the parameters."""
+        return itertools.chain(np.nditer(self.W, op_flags=['readwrite']),
+                               np.nditer(self.b, op_flags=['readwrite']))
+    
+    def get_output(self, X):
+        """Perform the forward step linear transformation."""
+        return X.dot(self.W) + self.b
+        
+    def get_params_grad(self, X, output_grad):
+        """Return a list of gradients over the parameters."""
+        JW = X.T.dot(output_grad)
+        Jb = np.sum(output_grad, axis=0)
+        return [g for g in itertools.chain(np.nditer(JW), np.nditer(Jb))]
+    
+    def get_input_grad(self, Y, output_grad):
+        """Return the gradient at the inputs of this layer."""
+        return output_grad.dot(self.W.T)
+
+
+
+class LogisticLayer(Layer):
+    """The logistic layer applies the logistic function to its inputs."""
+    
+    def get_output(self, X):
+        """Perform the forward step transformation."""
+        return logistic(X)
+    
+    def get_input_grad(self, Y, output_grad):
+        """Return the gradient at the inputs of this layer."""
+        return np.multiply(logistic_deriv(Y), output_grad)
+
+       
 class SoftmaxOutputLayer(Layer):
     """The softmax output layer computres the classification probabilties at the output."""
     def get_output(self, X):
@@ -85,9 +129,14 @@ class SoftmaxOutputLayer(Layer):
     def get_cost(self, Y, T):
         """Return the cost at the output of this output layer"""
         return -np.multiply(T, np.log(Y)).sum()/ Y.shape[0]
-         
-            
-    
+
+# Define a sample model to be trained on the data
+hidden_neurons_1 = 2
+hidden_neurons_2 = 2
+# Create the model
+layers = [] # Define a list of layers
+# Add first hidden layer
+layers.append(LinearLayer(X_train.shape[1], hidden_neurons_1))    
     
     
     
