@@ -74,6 +74,17 @@ class Layer(object):
             Output layer uses targets T to compute the gradient based on the
             output error instead of output_grad"""
             
+class SoftmaxOutputLayer(Layer):
+    """The softmax output layer computres the classification probabilties at the output."""
+    def get_output(self, X):
+        """Perform the forward step transformataion"""
+        return softmax(X)
+    def get_input_grad(self, Y, T):
+        """Return the gradient at the inputs of this layer."""
+        return (Y- T)/ Y.shape[0]
+    def get_cost(self, Y, T):
+        """Return the cost at the output of this output layer"""
+        return -np.multiply(T, np.log(Y)).sum()/ Y.shape[0]
          
             
     
